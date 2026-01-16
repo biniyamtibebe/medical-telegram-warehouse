@@ -1,0 +1,20 @@
+# Ignore credentials and sessions
+.env
+*.session
+*.session-journal
+
+# Ignore data and logs
+data/
+logs/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Docker
+*.log
+
+# dbt
+medical_warehouse/target/
+medical_warehouse/dbt_packages/
