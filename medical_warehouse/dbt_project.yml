@@ -1,0 +1,48 @@
+# medical_warehouse/dbt_project.yml
+
+name: 'medical_warehouse'               # Must match the profile name in profiles.yml
+version: '1.0.0'
+config-version: 2
+
+# This information helps dbt know which profile to use
+profile: 'medical_warehouse'
+
+# These paths specify where dbt should look for different kinds of files
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"                   # directory which will store compiled SQL files
+clean-targets:                          # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+# Full syntax: https://docs.getdbt.com/reference/project-configs/models
+models:
+  medical_warehouse:
+    # Default materialization for all models (can be overridden)
+    +materialized: table                  # good default for warehouse
+    
+    # Staging layer → usually views (lightweight, easy to debug)
+    staging:
+      +materialized: view
+      +schema: staging                    # optional: separate schema for staging
+    
+    # Marts / dimensional models → tables (optimized for analytics)
+    marts:
+      +materialized: table
+      +schema: marts                      # separate schema for final analytics tables
+    
+    # Optional: Apply tags or groups for access control / organization
+    # +tags: ['medical', 'telegram']
+
+# Optional but very useful: Variables (can be overridden with --vars)
+vars:
+  current_date: "{{ run_started_at.strftime('%Y-%m-%d') }}"
+
+# Optional: Packages (add later if you use dbt-utils, dbt-expectations, etc.)
+# require-dbt-version: ">=1.7.0"
