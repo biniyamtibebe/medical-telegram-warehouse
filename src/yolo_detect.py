@@ -4,13 +4,17 @@ import pandas as pd
 from ultralytics import YOLO
 from dotenv import load_dotenv
 import psycopg2
+import torch  # Make sure to import torch
 
-load_dotenv()
+load_dotenv(r"C:\Users\hp\Desktop\medical-telegram-warehouse\medical-telegram-warehouse\.env")
 
-# DB connection
-conn_params = {  # Same as above
+# Allowlisting DetectionModel from the ultralytics package
+torch.serialization.add_safe_globals([YOLO])
+
+# DB connection parameters
+conn_params = {
     'dbname': os.getenv('POSTGRES_DB'),
-    # ... (fill similarly)
+    # Fill in the other parameters as needed
 }
 
 # Load YOLO model
@@ -54,7 +58,7 @@ def run_detection(image_dir):
                         })
     
     # Save to CSV
-    csv_path = 'data/yolo_results.csv'
+    csv_path = r'C:\Users\hp\Desktop\medical-telegram-warehouse\medical-telegram-warehouse\data\yolo_results.csv'
     pd.DataFrame(results).to_csv(csv_path, index=False)
     return csv_path
 
